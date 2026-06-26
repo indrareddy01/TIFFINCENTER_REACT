@@ -15,42 +15,46 @@ function OrderForm({
 
   return (
 
-    <div className="bg-white p-8 rounded-2xl shadow-md">
+<div className="bg-white rounded-3xl shadow-xl p-8">
 
-      <div className="grid gap-5">
+<h2 className="text-3xl font-bold mb-8">
 
-        {/* Name */}
-        <input
-          type="text"
-          name="customer"
-          placeholder="Enter Your Name"
-          value={customerDetails.customer}
-          onChange={handleChange}
-          className="input-field"
-        />
+Customer Details
 
-        {/* Food */}
-        <input
-          type="text"
-          name="item"
-          placeholder="Enter Food Item"
-          value={customerDetails.item}
-          onChange={handleChange}
-          className="input-field"
-        />
+</h2>
 
-        {/* Address */}
-        <textarea
-          name="address"
-          placeholder="Enter Delivery Address"
-          value={customerDetails.address}
-          onChange={handleChange}
-          className="input-field h-32"
-        />
+<div className="grid gap-6">
 
-      </div>
+<input
+type="text"
+name="customer"
+placeholder="Full Name"
+value={customerDetails.customer}
+onChange={handleChange}
+className="input-field"
+/>
 
-    </div>
+<input
+type="text"
+name="item"
+placeholder="Food Item"
+value={customerDetails.item}
+onChange={handleChange}
+className="input-field"
+/>
+
+<textarea
+name="address"
+rows="5"
+placeholder="Delivery Address"
+value={customerDetails.address}
+onChange={handleChange}
+className="input-field"
+/>
+
+</div>
+
+</div>
   );
 }
 

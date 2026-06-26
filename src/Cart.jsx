@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 function Cart({
@@ -9,26 +10,29 @@ function Cart({
 
   const [orderPlaced, setOrderPlaced] = useState(false);
 
-  const total = cartItems.reduce(
-  (sum, item) =>
-    sum + item.price * item.quantity,
+ const subtotal = cartItems.reduce(
+  (sum, item) => sum + item.price * item.quantity,
   0
 );
 
-  // Proceed Order Function
+const deliveryFee = subtotal > 0 ? 40 : 0;
+const discount = subtotal >= 300 ? 30 : 0;
+const gst = Math.round(subtotal * 0.05);
+
+const total =
+  subtotal +
+  deliveryFee +
+  gst -
+  discount;
+  
   const handleOrder = () => {
 
-    // Validation
     if (
       customerDetails.customer === "" ||
       customerDetails.item === "" ||
       customerDetails.address === ""
     ) {
-
-      alert(
-        "Please fill the Order Form before proceeding."
-      );
-
+      alert("Please fill the Order Form before proceeding.");
       return;
     }
 
@@ -38,21 +42,29 @@ function Cart({
 
   return (
 
-    <div>
+    <div className="max-w-6xl mx-auto py-10">
 
-      <h1 className="section-title">
-        Your Cart
+      <h1 className="text-4xl font-bold text-center text-gray-800">
+        🛒 Your Shopping Cart
       </h1>
+
+      <p className="text-center text-gray-500 mt-2 mb-10">
+        Review your delicious order before checkout.
+      </p>
 
       {/* Empty Cart */}
       {
         cartItems.length === 0 && !orderPlaced && (
 
-          <div className="bg-white p-8 rounded-2xl shadow-md text-center">
+          <div className="bg-white rounded-3xl shadow-lg p-12 text-center">
 
-            <h2 className="text-2xl font-semibold text-gray-600">
-              Cart is Empty
+            <h2 className="text-3xl font-bold text-gray-700">
+              Your Cart is Empty
             </h2>
+
+            <p className="text-gray-500 mt-3">
+              Add some tasty tiffins from our menu.
+            </p>
 
           </div>
 
@@ -63,181 +75,182 @@ function Cart({
       {
         cartItems.length > 0 && !orderPlaced && (
 
-          <div className="grid gap-5">
+          <div className="space-y-6">
 
-           {
-  cartItems.map((item) => (
+            {
+              cartItems.map((item) => (
 
-    <div
-      key={item.id}
-      className="
-        bg-white
-        p-5
-        rounded-2xl
-        shadow-md
-        flex
-        justify-between
-        items-center
-      "
-    >
+                <div
+                  key={item.id}
+                  className="bg-white rounded-3xl shadow-lg p-6 flex flex-col md:flex-row justify-between items-center gap-6"
+                >
 
-      {/* Left Side */}
-      <div className="flex items-center gap-4">
+                  {/* Food */}
+                  <div className="flex items-center gap-5">
 
-        <img
-          src={item.image}
-          alt={item.name}
-          className="
-            w-24
-            h-24
-            object-cover
-            rounded-xl
-          "
-        />
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-32 h-32 rounded-2xl object-cover"
+                    />
 
-        <div>
+                    <div>
 
-          <h2 className="text-xl font-semibold">
-            {item.name}
-          </h2>
+                      <h2 className="text-2xl font-bold">
+                        {item.name}
+                      </h2>
 
-          <p className="text-gray-500">
-            ₹ {item.price}
-          </p>
+                      <p className="text-gray-500 mt-2">
+                        Fresh & Delicious
+                      </p>
 
-        </div>
+                      <p className="text-orange-500 text-xl font-bold mt-2">
+                        ₹ {item.price}
+                      </p>
 
-      </div>
+                    </div>
 
-      {/* Counter */}
-      <div className="flex items-center gap-3">
+                  </div>
 
-        <button
-          onClick={() => decreaseQuantity(item.id)}
-          className="
-            bg-red-500
-            hover:bg-red-600
-            text-white
-            w-10
-            h-10
-            rounded-full
-            font-bold
-          "
-        >
-          -
-        </button>
+                  {/* Quantity */}
+                  <div className="flex items-center gap-4">
 
-        <span className="text-xl font-bold">
-          {item.quantity}
-        </span>
+                    <button
+                      onClick={() => decreaseQuantity(item.id)}
+                      className="w-12 h-12 rounded-full bg-red-500 hover:bg-red-600 text-white text-xl font-bold"
+                    >
+                      -
+                    </button>
 
-        <button
-          onClick={() => increaseQuantity(item.id)}
-          className="
-            bg-green-500
-            hover:bg-green-600
-            text-white
-            w-10
-            h-10
-            rounded-full
-            font-bold
-          "
-        >
-          +
-        </button>
+                    <span className="text-2xl font-bold">
+                      {item.quantity}
+                    </span>
 
-      </div>
+                    <button
+                      onClick={() => increaseQuantity(item.id)}
+                      className="w-12 h-12 rounded-full bg-green-500 hover:bg-green-600 text-white text-xl font-bold"
+                    >
+                      +
+                    </button>
 
-      {/* Item Total */}
-      <h2 className="text-orange-500 text-2xl font-bold">
-        ₹ {item.price * item.quantity}
-      </h2>
+                  </div>
+
+                  {/* Total */}
+                  <div>
+
+                    <h2 className="text-3xl font-bold text-orange-500">
+                      ₹ {item.price * item.quantity}
+                    </h2>
+
+                  </div>
+
+                </div>
+
+              ))
+            }
+
+           <div className="bg-white rounded-3xl shadow-xl p-8 border">
+
+  <h2 className="text-3xl font-bold mb-8 text-gray-800">
+    📋 Order Summary
+  </h2>
+
+  <div className="space-y-4">
+
+    <div className="flex justify-between text-lg">
+      <span>Subtotal</span>
+      <span>₹ {subtotal}</span>
+    </div>
+
+    <div className="flex justify-between text-lg">
+      <span>Delivery Fee</span>
+      <span>₹ {deliveryFee}</span>
+    </div>
+
+    <div className="flex justify-between text-lg text-green-600">
+      <span>Discount</span>
+      <span>- ₹ {discount}</span>
+    </div>
+
+    <div className="flex justify-between text-lg">
+      <span>GST (5%)</span>
+      <span>₹ {gst}</span>
+    </div>
+
+    <hr className="my-4"/>
+
+    <div className="flex justify-between text-2xl font-bold">
+
+      <span>Total</span>
+
+      <span className="text-orange-500">
+        ₹ {total}
+      </span>
 
     </div>
 
-  ))
-}
+  </div>
 
-            {/* Total */}
-            <div
-              className="
-                bg-orange-500
-                text-white
-                p-5
-                rounded-2xl
-                text-right
-                text-2xl
-                font-bold
-              "
-            >
-              Total: ₹ {total}
-            </div>
+</div>
 
-            {/* Proceed Button */}
             <button
-              onClick={handleOrder}
-              className="
-                bg-green-500
-                hover:bg-green-600
-                text-white
-                py-4
-                rounded-2xl
-                text-xl
-                font-semibold
-                transition
-                shadow-md
-                hover:shadow-xl
-              "
-            >
+  onClick={handleOrder}
+  className="w-full bg-orange-500 hover:bg-orange-600 text-white py-5 rounded-2xl text-xl font-bold shadow-lg transition duration-300 hover:scale-105"
+>
 
-              ✅ Proceed Order
+  Proceed To Checkout →
 
-            </button>
+</button>
 
           </div>
 
         )
       }
 
-      {/* Success Message */}
+      {/* Success */}
       {
         orderPlaced && (
 
-          <div
-            className="
-              bg-white
-              p-10
-              rounded-2xl
-              shadow-md
-              text-center
-            "
-          >
+          <div className="bg-white rounded-3xl shadow-xl p-12 text-center">
 
-            <h1 className="text-5xl mb-5">
+            <div className="text-7xl mb-6">
               🎉
-            </h1>
+            </div>
 
-            <h2 className="text-3xl font-bold text-green-600 mb-3">
-
-              Order Placed Successfully!
-
+            <h2 className="text-4xl font-bold text-green-600">
+            🎉 Your Order Has Been Confirmed!
             </h2>
 
-            <p className="text-gray-600 text-lg mb-2">
+            <p className="mt-6 text-lg text-gray-600">
 
-              Thank You,
-              {" "}
-              <span className="font-semibold">
+              Thank you,
+              <span className="font-bold">
+                {" "}
                 {customerDetails.customer}
               </span>
 
             </p>
 
-            <p className="text-gray-600">
-
-              Your delicious tiffins are being prepared 🍽️
-
+            <p className="mt-2 text-gray-500">
+          Our chefs have started preparing your order.
             </p>
+
+            <p className="mt-4 text-lg text-green-600 font-semibold">
+
+Estimated Delivery:
+<span className="text-orange-500">
+
+  25 - 30 Minutes
+
+</span>
+
+</p>
+
+<p className="text-gray-500 mt-3">
+
+Thank you for choosing TiffinHub ❤️
+
+</p>
 
           </div>
 
@@ -245,6 +258,7 @@ function Cart({
       }
 
     </div>
+
   );
 }
 
